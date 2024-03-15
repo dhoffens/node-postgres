@@ -31,23 +31,28 @@ const getMerchants = async () => {
 
 const createMerchant = (body) => {
     return new Promise(function (resolve, reject) {
-        const { name, email } = body;
-        pool.query(
-            "INSERT INTO merchants (name, email) VALUES ($1, $2) RETURNING *"
-            [name, email],
-            (error, results) => {
-                if (error) {
-                    reject(error);
-                }
-                if (results && results.rows) {
-                    resolve(`A new merchant has been added: ${JSON.stringify(results.rows[0])}`)
-                } else {
-                    reject(new Error("No results found"));
-                }
-            }
-        )
-    })
-}
+      const { name, email } = body;
+      pool.query(
+        "INSERT INTO merchants (name, email) VALUES ($1, $2) RETURNING *",
+        [name, email],
+        (error, results) => {
+          if (error) {
+            reject(error);
+          }
+          if (results && results.rows) {
+            
+            console.log('$', results)
+            
+            resolve(
+              `A new merchant has been added: ${JSON.stringify(results.rows[0])}`
+            );
+          } else {
+            reject(new Error("No results found"));
+          }
+        }
+      );
+    });
+  };
 
 const deleteMerchant = (id) => {
     return new Promise(function (resolve, reject) {
@@ -75,7 +80,8 @@ const updateMerchant = (id, body) => {
                     reject(error);
                 }
                 if (results && results.rows) {
-                    resolve(`Merchant updated: ${JSON.stringify(results.rows[0])}`);
+                    const newMerchant = results.rows[0];
+                    resolve({ message: 'A new merchant has been added', merchant: newMerchant})
                 } else {
                     reject(new Error("No results found"));
                 }

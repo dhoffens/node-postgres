@@ -28,7 +28,12 @@ const App: FC = () => {
       },
       body: JSON.stringify({ name, email }),
     })
-    .then((response) => response.json())
+    .then((response) => {
+      if (!response.ok) {
+        console.error(response)
+      }
+      return response.json()
+    })
     .then(data => {
       alert(data);
       getMerchant();
@@ -78,7 +83,7 @@ const App: FC = () => {
       {merchants.length > 0 ? (
         merchants.map((merchant) => (
           <div key={merchant.id}>
-            {merchant.name} {merchant.email}
+            {merchant.id} {merchant.name} {merchant.email}
           </div>
         ))
       ) : ('There is no merchant data available')}
