@@ -40,9 +40,7 @@ const createMerchant = (body) => {
             reject(error);
           }
           if (results && results.rows) {
-            
-            console.log('$', results)
-            
+                        
             resolve(
               `A new merchant has been added: ${JSON.stringify(results.rows[0])}`
             );
