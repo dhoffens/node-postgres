@@ -1,20 +1,24 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, FC } from 'react'
 import './App.css'
 
-function App() {
-  const [merchants, setMerchants] = useState('false');
+type Merchant = {
+  id: number,
+  name: string,
+  email: string
+}
 
-  function getMerchant() {
+const App: FC = () => {
+  const [merchants, setMerchants] = useState<Merchant[]>([]);
+
+  const getMerchant = () => {
     fetch('http://localhost:3001')
-      .then(response => {
-        return response.text();
-      })
-      .then(data => {
+      .then((response) => response.json())
+      .then((data: Merchant[]) => {
         setMerchants(data);
       });
   }
 
-  function createMerchant() {
+  const createMerchant = () => {
     let name = prompt('Enter merchant name');
     let email = prompt('Enter merchant email');
     fetch('http://localhost:3001/merchants', {
@@ -22,49 +26,47 @@ function App() {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({name, email}),
+      body: JSON.stringify({ name, email }),
     })
-    .then(response => {
-      return response.text();
-    })
+    .then((response) => response.json())
     .then(data => {
       alert(data);
       getMerchant();
     });
   }
 
-  function deleteMerchant() {
+  const deleteMerchant = () => {
     let id = prompt('Enter merchant id');
-    fetch(`http://localhost:3001/merchants/${id}`, {
-      method: 'DELETE',
-    })
-      .then(response => {
-        return response.text();
+    if (id) {
+      fetch(`http://localhost:3001/merchants/${id}`, {
+        method: 'DELETE',
       })
+      .then(response => response.json())
       .then(data => {
         alert(data);
         getMerchant();
       });
+    }
   }
 
-  function updateMerchant() {
+  const updateMerchant = () => {
     let id = prompt('Enter merchant id');
     let name = prompt('Enter new merchant name');
     let email = prompt('Enter new merchant email');
-    fetch(`http://localhost:3001/merchants/${id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({name, email}),
-    })
-      .then(response => {
-        return response.text();
+    if (id) {
+      fetch(`http://localhost:3001/merchants/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ name, email }),
       })
-      .then(data => {
-        alert(data);
-        getMerchant();
-      })
+        .then(response => response.text())
+        .then(data => {
+          alert(data);
+          getMerchant();
+        })
+    }
   }
 
   useEffect(() => {
@@ -73,7 +75,13 @@ function App() {
 
   return (
     <div>
-      {merchants ? merchants : 'There is no merchant data available'}
+      {merchants.length > 0 ? (
+        merchants.map((merchant) => (
+          <div key={merchant.id}>
+            {merchant.name} {merchant.email}
+          </div>
+        ))
+      ) : ('There is no merchant data available')}
       <br />
       <button onClick={createMerchant}>Add merchant</button>
       <br />

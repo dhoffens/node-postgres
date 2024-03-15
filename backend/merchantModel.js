@@ -19,7 +19,7 @@ const getMerchants = async () => {
                 if (results && results.rows) {
                     resolve(results.rows);
                 } else {
-                    reject(new Error(("No results found"));
+                    reject(new Error("No results found"))
                 }
             })
         })
