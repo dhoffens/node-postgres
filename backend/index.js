@@ -1,8 +1,10 @@
-const express = require('express')
-const app = express()
+const express = require('express');
+const cors = require('cors');
+const app = express();
 const port = 3001
-const merchant_model = require('./merchantModel')
+// const merchant_model = require('./merchantModel');
 
+app.use(cors());
 app.use(express.json())
 app.use(function (req, res, next) {
     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:5173');
@@ -15,49 +17,55 @@ app.use(function (req, res, next) {
     }
 });
 
-app.get('/', (req, res) => {
-    merchant_model.getMerchants()
-    .then(response => {
-        res.status(200).send(response);
+app.use('/login', (req, res) => {
+    res.send({
+        token: 'test123'
     })
-    .catch(error => {
-        res.status(500).send(error);
-    });
-});
+})
 
-app.post('/merchants', (req, res) => {
-    merchant_model.createMerchant(req.body)
-    .then(response => {
-        res.status(200).json(response);
-    })
-    .catch(error => {
-        res.status(500).send(error);
-    });
-});
+// app.get('/', (req, res) => {
+//     merchant_model.getMerchants()
+//     .then(response => {
+//         res.status(200).send(response);
+//     })
+//     .catch(error => {
+//         res.status(500).send(error);
+//     });
+// });
 
-app.delete('/merchants/:id', (req, res) => {
-    merchant_model.deleteMerchant(req.params.id)
-    .then(response => {
-        res.status(200).send(response);
-    })
-    .catch(error => {
-        res.status(500).send(error);
-    });
-});
+// app.post('/merchants', (req, res) => {
+//     merchant_model.createMerchant(req.body)
+//     .then(response => {
+//         res.status(200).json(response);
+//     })
+//     .catch(error => {
+//         res.status(500).send(error);
+//     });
+// });
 
-app.put('/merchants/:id', (req, res) => {
-    const id = req.params.id;
-    const body = req.body;
+// app.delete('/merchants/:id', (req, res) => {
+//     merchant_model.deleteMerchant(req.params.id)
+//     .then(response => {
+//         res.status(200).send(response);
+//     })
+//     .catch(error => {
+//         res.status(500).send(error);
+//     });
+// });
 
-    merchant_model
-        .updateMerchant(id, body)
-        .then((response) => {
-            res.status(200).send(response);
-        })
-        .catch((error) => {
-            res.status(500).send(error);
-        });
-});
+// app.put('/merchants/:id', (req, res) => {
+//     const id = req.params.id;
+//     const body = req.body;
+
+//     merchant_model
+//         .updateMerchant(id, body)
+//         .then((response) => {
+//             res.status(200).send(response);
+//         })
+//         .catch((error) => {
+//             res.status(500).send(error);
+//         });
+// });
 
 app.listen(port, () => {
   console.log(`App running on port ${port}.`)
