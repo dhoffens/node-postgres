@@ -1,8 +1,8 @@
 import { useState, useEffect, FC } from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import Dashboard from './components/Dashboard/Dashboard';
-import Login from './components/Login/Login';
-import Preferences from './components/Preferences/Preferences';
+import Dashboard from '../Dashboard/Dashboard';
+import Login from '../Login/Login';
+import Preferences from '../Preferences/Preferences';
 import './App.css'
 
 // type Merchant = {
@@ -11,12 +11,31 @@ import './App.css'
 //   email: string
 // }
 
+interface UserToken {
+  token: string;
+}; 
+
+const setToken = (userToken: UserToken) => {
+  sessionStorage.setItem('token', JSON.stringify(userToken));
+}
+
+const getToken = () => {
+  const tokenString = sessionStorage.getItem('token')
+  const userToken: UserToken | null = tokenString ? JSON.parse(tokenString) : null;
+  return userToken?.token;
+}
+
 const App: FC = () => {
-  const [token, setToken] = useState();
+  
+  const token = getToken();
+
+  // const [token, setToken] = useState();
 
   if(!token) {
     return <Login setToken={setToken} />
   }
+
+
   // const [merchants, setMerchants] = useState<Merchant[]>([]);
 
   // const getMerchant = () => {
