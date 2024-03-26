@@ -19,12 +19,12 @@ const Login: React.FC<LoginProps> = ({ setToken }) => {
         event.preventDefault();
         console.log('submit', username, password);
 
-        const token = await loginUser({
+        const tokenResponse = await loginUser({
             username,
             password
         });
 
-        setToken(token);
+        setToken(tokenResponse.token);
     }
 
     async function loginUser(credentials: Credentials): Promise<any> {
